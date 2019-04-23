@@ -1,0 +1,93 @@
+;------------------------------------------------------------------------------
+; VS1053 Init
+;------------------------------------------------------------------------------
+VS_INIT		LD A,%00000000          ; XCS=0 XDCS=0
+		OUT (#05),A
+		LD HL,TABLE
+		LD B,44
+VS_INIT1 	LD E,(HL)
+		CALL VS_SDI
+		JR C,ERROR
+		INC HL
+		DJNZ VS_INIT1
+		LD A,%00100000          ; XCS=0 XDCS=1
+		OUT (#05),A
+ERROR		RET
+
+;------------------------------------------------------------------------------
+; VS1053
+;------------------------------------------------------------------------------
+; #xx04 Data Buffer (write/read):
+;	bit 7-0	= Stores read/write data
+
+; #xx05 Command/Status Register (write):
+;	bit 7	= XSC
+;	bit 6	= XDCS
+;	bit 5	= mode		0: режим SCI/SDI; 1: STREAM 32bit(левый канал + правый канал)
+;	bit 4	= spiclk	0: 1.75MHz; 1: 3.5MHz 
+;	bit 3-0	= Reserved
+
+; #xx05 Command/Status Register (read):
+; 	bit 7	= BUSY		1: Занято, идет передача; 0: Свободно 
+; 	bit 6	= DREQ		1: Запрос новых данных; 0: Занято
+;	bit 5-0	= Reserved
+
+;------------------------------------------------------------------------------
+VS_PUT		LD A,(HL)
+		CALL VS_WR
+		JR NC,vs_error		; CY=0 ERROR!
+		INC HL
+		DEC BC
+		LD A,C
+		OR B
+		JR NZ,VS_PUT
+vs_error	RET
+
+
+
+;------------------------------------------------------------------------------
+; HL = address command
+VS_SCI		LD B,4
+vs_sci1		LD A,(HL)
+		CALL VS_WR
+		JR NC,vs_error
+		INC HL
+		DJNZ vs_sci1
+		
+
+
+
+;------------------------------------------------------------------------------
+; A = data 7..0
+VS_WR		OUT (#04),A		; data out 7..0
+		LD DE,#0000
+vs_wait		DEC DE
+		LD A,E
+		OR D
+		RET Z			; CY=0 Time Out
+		IN A,(#05)
+		RLCA
+		JR C,vs_wait
+		RLCA
+		JR NC,vs_wait		; CY=1 OK
+		IN A,(#04)
+		RET
+
+;------------------------------------------------------------------------------
+DATA_RESET	DB #02,#00,%01001000,%00000100	; [WRITE][SCI_MODE][SM_SDINEW & SM_SM_LINE1][SM_RESET]
+
+DATA_PCM48KHZ  	DB #52,#49,#46,#46,#FF,#FF,#FF,#FF      ;REFF....
+		DB #57,#41,#56,#45,#66,#6D,#74,#20      ;WAVEfmt
+		DB #10
+		DB #00,#00,#00,#01,#00,#02,#00
+
+		DB #80,#BB,#00,#00      ;48kHz
+		DB #00,#EE,#02,#00
+
+;   		DB #44,#AC,#00,#00      ;41.1kHz
+;  		DB #10,#B1,#02,#00
+
+		DB #04,#00
+		DB #10,#00
+		DB #64,#61,#74,#61                      ;data
+		DB #FF,#FF,#FF,#FF

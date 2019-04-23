@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<FT_EEPROM>
+  <Chip_Details>
+    <Type>FT232R</Type>
+  </Chip_Details>
+  <USB_Device_Descriptor>
+    <VID_PID>0</VID_PID>
+    <idVendor>0403</idVendor>
+    <idProduct>6001</idProduct>
+    <bcdUSB>USB 2.0</bcdUSB>
+  </USB_Device_Descriptor>
+  <USB_Config_Descriptor>
+    <bmAttributes>
+      <RemoteWakeupEnabled>true</RemoteWakeupEnabled>
+      <SelfPowered>false</SelfPowered>
+      <BusPowered>true</BusPowered>
+    </bmAttributes>
+    <IOpullDown>false</IOpullDown>
+    <MaxPower>44</MaxPower>
+  </USB_Config_Descriptor>
+  <USB_String_Descriptors>
+    <Manufacturer>(C) MVV, 2011</Manufacturer>
+    <Product_Description>ReVerSE U8EP3C</Product_Description>
+    <SerialNumber_Enabled>true</SerialNumber_Enabled>
+    <SerialNumber>U8EP3C Devboard</SerialNumber>
+    <SerialNumberPrefix>U8</SerialNumberPrefix>
+  </USB_String_Descriptors>
+  <Hardware_Specific>
+    <HighIO>false</HighIO>
+    <D2XXDriver>true</D2XXDriver>
+    <ExternalOscillator>false</ExternalOscillator>
+    <Invert_RS232_Signals>
+      <TXD>false</TXD>
+      <RXD>false</RXD>
+      <RTS>false</RTS>
+      <CTS>false</CTS>
+      <DTR>false</DTR>
+      <DSR>false</DSR>
+      <DCD>false</DCD>
+      <RI>false</RI>
+    </Invert_RS232_Signals>
+    <IO_Controls>
+      <C0>I/O MODE</C0>
+      <C1>I/O MODE</C1>
+      <C2>I/O MODE</C2>
+      <C3>I/O MODE</C3>
+      <C4>PWRON#</C4>
+    </IO_Controls>
+  </Hardware_Specific>
+</FT_EEPROM>
